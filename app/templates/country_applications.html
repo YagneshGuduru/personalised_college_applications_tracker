@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Applications — {{ country }}{% endblock %}
+
+{% block content %}
+
+<h1 style="margin-bottom:1rem;">Applications — {{ country }}</h1>
+
+<!-- SUMMARY BAR (compact size) -->
+<div class="summary-bar">
+
+    <div class="summary-box">Total: <span>{{ summary.total }}</span></div>
+    <div class="summary-box">Shortlisted: <span>{{ summary.shortlisted }}</span></div>
+    <div class="summary-box">Preparing: <span>{{ summary.preparing }}</span></div>
+    <div class="summary-box">Submitted: <span>{{ summary.submitted }}</span></div>
+    <div class="summary-box">Admitted: <span>{{ summary.admitted }}</span></div>
+    <div class="summary-box">Rejected: <span>{{ summary.rejected }}</span></div>
+
+</div>
+
+<!-- APPLICATION CARDS -->
+<div class="app-list">
+
+    {% for app in apps %}
+    <a href="{{ url_for('application_details', app_id=app.app_id) }}" class="app-card">
+
+        <h2>{{ app.course_name }}</h2>
+        <p class="uni">{{ app.university_name }}</p>
+
+        <div class="app-footer">
+            <div class="deadline">
+                <span class="dot" data-deadline="{{ app.deadline_date }}"></span>
+                Deadline: {{ app.deadline_date or "N/A" }}
+            </div>
+
+            <span class="status-tag">{{ app.status }}</span>
+        </div>
+
+    </a>
+    {% endfor %}
+
+</div>
+
+<script>
+// DEADLINE DOT COLOR CALCULATION
+const dots = document.querySelectorAll(".dot");
+
+dots.forEach(dot => {
+    const dateStr = dot.dataset.deadline;
+
+    if (!dateStr) {
+        dot.style.background = "gray";
+        return;
+    }
+
+    const today = new Date();
+    const deadline = new Date(dateStr);
+    const diff = (deadline - today) / (1000 * 60 * 60 * 24);
+
+    if (diff < 0) {
+        dot.style.background = "gray";          // past
+    } 
+    else if (diff <= 7) {
+        dot.style.background = "red";           // urgent
+    }
+    else if (diff <= 14) {
+        dot.style.background = "orange";        // moderate
+    }
+    else {
+        dot.style.background = "green";         // safe
+    }
+});
+</script>
+
+{% endblock %}

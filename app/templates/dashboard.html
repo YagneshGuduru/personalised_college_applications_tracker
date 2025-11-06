@@ -18,7 +18,7 @@
 
     <div id="country-buttons">
         {% for country, count in countries %}
-        <a href="" class="country-card">
+        <a href="{{ url_for('country_applications', country_name = country)}}" class="country-card">
             <h3>{{ country }}</h3>
             <p>No of applications listed: {{ count }}</p>
         </a>

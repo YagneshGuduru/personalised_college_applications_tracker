@@ -109,3 +109,33 @@ def init_app(app):
                     )
         universities_data = cursor.fetchall()
         return [row["university_name"] for row in universities_data]
+    
+    # Route for country wise applications.
+    @app.route("/country/<string:country_name>")
+    def country_applications(country_name):
+        conn = db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+                        SELECT * FROM applications
+                        WHERE country_name = ?
+                       ORDER BY deadline_date ASC
+                    ''', (country_name,))
+        app_list = cursor.fetchall()
+
+        def count_status(status):
+            return sum(1 for a in app_list if a['status'] == status)
+        
+        summary = {
+            "total" : len(app_list),
+            "shortlisted" : count_status("shortlisted"),
+            "preparing" : count_status("preparing"),
+            "submitted" : count_status("submitted"),
+            "admitted" : count_status("admitted"),
+            "rejected" : count_status("rejected")
+        }
+
+        app_list = [dict(a) for a in app_list]
+
+        return render_template("country_applications.html", country = country_name, apps = app_list, summary = summary)
+    
