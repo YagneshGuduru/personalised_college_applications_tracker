@@ -1,8 +1,10 @@
-from flask import render_template
+from flask import render_template, request, redirect, url_for
 from app.db import db_connection
+import pycountry
 
 def init_app(app):
 
+    # Route to Dashboard.
     @app.route("/")
     def dashboard():
         conn = db_connection()
@@ -18,3 +20,92 @@ def init_app(app):
         countries = [(row["country_name"], row['count']) for row in country_data]
 
         return render_template("dashboard.html", countries = countries)
+    
+    # Route to add application form.
+    @app.route("/add_application", methods=["GET", "POST"])
+    def add_application():
+
+        if request.method == "POST":
+            form = request.form
+            conn = db_connection()
+            cursor = conn.cursor()
+
+            university_name       = form["university_name"]
+            country_name          = form["country_name"]
+            course_name           = form["course_name"]
+            degree_type           = form.get("degree_type")
+            course_url            = form.get("course_url")
+            intake_type           = form.get("intake_type")
+            intake_year           = form.get("intake_year")
+            application_open_date = form.get("application_open_date")
+            deadline_date         = form.get("deadline_date")
+            ielts_required        = form.get("ielts_required")
+            german_required       = form.get("german_required")
+            extra_requirements    = form.get("extra_requirements")
+            application_mode      = form.get("application_mode")
+            portal_email          = form.get("portal_email")
+            portal_password_hint  = form.get("portal_password_hint")
+            status                = form["status"]
+            date_submitted        = form.get("date_submitted")
+            time_submitted        = form.get("time_submitted")
+            decision_date         = form.get("decision_date")
+            extra_info            = form.get("extra_info")
+                
+
+            cursor.execute("""
+                INSERT INTO applications (
+                    university_name, country_name, course_name,
+                    degree_type, course_url,
+                    intake_type, intake_year,
+                    application_open_date, deadline_date,
+                    ielts_required, german_required, extra_requirements,
+                    application_mode, portal_email, portal_password_hint,
+                    status, date_submitted, time_submitted, decision_date,
+                    extra_info
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                university_name, country_name, course_name,
+                degree_type, course_url,
+                intake_type, intake_year,
+                application_open_date, deadline_date,
+                ielts_required, german_required, extra_requirements,
+                application_mode, portal_email, portal_password_hint,
+                status, date_submitted, time_submitted, decision_date,
+                extra_info
+            ))
+
+            conn.commit()
+
+            return redirect(url_for("dashboard"))
+
+        return render_template("add_application.html")
+    
+    # API route for countries.
+    @app.route("/api/country_suggest")
+    def country_suggest():
+        q = request.args.get("q", "").lower()
+
+        countries = [c.name for c in pycountry.countries]
+
+        # filter by prefix or partial match.
+        matches = [ c for c in countries if c.lower().startswith(q)]
+
+        return matches[:10]
+    
+    # API route for universities.
+    @app.route("/api/university_suggest")
+    def university_suggest():
+        q = request.args.get("q", "")
+        conn = db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+                        SELECT DISTINCT university_name
+                        FROM applications
+                        WHERE university_name LIKE ?
+                        LIMIT 10
+                    ''', (F"{q}%",)
+                    )
+        universities_data = cursor.fetchall()
+        return [row["university_name"] for row in universities_data]
