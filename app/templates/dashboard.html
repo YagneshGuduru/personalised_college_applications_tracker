@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Application Dashboard{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <h1>Application Dashboard</h1>
+    <p>Track all your master's applications in one place.</p>
+
+    <a href="" class="btn btn-primary">
+        Add Application
+    </a>
+</section>
+
+<div class="container">
+    <h2 style="margin-bottom: 1rem;">Countries</h2>
+
+    <div id="country-buttons">
+        {% for country, count in countries %}
+        <a href="" class="country-card">
+            <h3>{{ country }}</h3>
+            <p>No of applications listed: {{ count }}</p>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
