@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block subnavbar%}
+<div class="subnavbar">
+
+    <div class="subnav-left">
+        Application Details
+    </div>
+
+    <div class="subnav-right">
+
+        <div class="dropdown subnav-item">
+            <span class="subnav-link">Application Actions ▾</span>
+            <div class="dropdown-panel">
+                <a class="dropdown-link">Edit Application</a>
+                <a class="dropdown-link danger">Delete Application</a>
+            </div>
+        </div>
+
+        <div class="dropdown subnav-item">
+            <span class="subnav-link">Add Items ▾</span>
+            <div class="dropdown-panel">
+                <a class="dropdown-link">Add Payment</a>
+                <a class="dropdown-link">Add Document</a>
+                <a class="dropdown-link">Add Timeline Event</a>
+                <a class="dropdown-link">Update Portal Status</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock%}
+{% block content %}
+
+<div class="container">
+
+    <div class="details-layout">
+
+        <!-- MAIN CARD -->
+        <div class="card big-details-card">
+
+            <!-- SUBMITTED TAG -->
+            <span class="submitted-tag">{{ app.status }}</span>
+
+            <!-- COURSE & INTAKE DETAILS -->
+            <h2 class="section-title">Course & Intake Details</h2>
+
+            <div class="two-grid">
+                <div>
+                    <label>Course Name</label>
+                    <p>{{ app.course_name }}</p>
+                </div>
+
+                <div>
+                    <label>University Name</label>
+                    <p>{{ app.university_name }}</p>
+                </div>
+
+                <div>
+                    <label>Country</label>
+                    <p>{{ app.country_name }}</p>
+                </div>
+
+                <div>
+                    <label>Degree Type</label>
+                    <p>{{ app.degree_type if app.degree_type else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Intake</label>
+                    <p>{{ app.intake_type }} {{ app.intake_year }}</p>
+                </div>
+                
+                <div>
+                    <label>Course URL</label>
+                    <p>
+                        {% if app.course_url %}
+                        <a href="{{ app.course_url }}" target="_blank">{{ app.course_url }}</a>
+                        {% else %}-{% endif %}
+                    </p>
+                </div>
+            </div>
+
+
+            <!-- APPLICATION DATES -->
+            <h2 class="section-title">Application Dates</h2>
+
+            <div class="dates-row">
+
+                <div>
+                    <label>Application Opens</label>
+                    <p>{{ app.application_open_date if app.application_open_date else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Deadline</label>
+                    <div class="deadline-line">
+                        <p>{{ app.deadline_date }}</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Date Submitted</label>
+                    <p>{{ app.date_submitted if app.date_submitted else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Time Submitted</label>
+                    <p>{{ app.time_submitted if app.time_submitted else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Decision Date</label>
+                    <p>{{ app.decision_date if app.decision_date else '-' }}</p>
+                </div>
+            </div>
+
+
+            <!-- REQUIREMENTS -->
+            <h2 class="section-title">Requirements</h2>
+
+            <div class="dates-row">
+                <div>
+                    <label>IELTS Required</label>
+                    <p>{{ app.ielts_required if app.ielts_required else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>German Required</label>
+                    <p>{{ app.german_required if app.german_required else '-' }}</p>
+                </div>
+            </div>
+            
+            <div class = "extra-req-box">
+                <div>
+                    <label>Extra Requirements</label>
+                    <p>{{ app.extra_requirements | replace("\n",'<br>') | safe if app.extra_requirements else '-' }}</p>
+                </div>
+            </div>
+
+
+            <!-- PORTAL INFO -->
+            <h2 class="section-title">Portal Information</h2>
+
+            <div class="dates-row">
+                <div>
+                    <label>Application Mode</label>
+                    <p>{{ app.application_mode if app.application_mode else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Portal Email</label>
+                    <p>{{ app.portal_email if app.portal_email else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Password Hint</label>
+                    <p>{{ app.portal_password_hint if app.portal_password_hint else '-' }}</p>
+                </div>
+
+                <div>
+                    <label>Portal Status</label>
+                    <p>{{ submission_info.portal_status_message if submission_info else '-' }}</p>
+                </div>
+            </div>
+
+
+            <!-- EXTRA INFO (full width) -->
+            {% if app.extra_info %}
+            <h2 class="section-title">Extra Info</h2>
+            <p class="extra-info-text">{{ app.extra_info | replace("\n",'<br>') | safe }}</p>
+            {% endif %}
+
+
+            <!-- DOCUMENTS -->
+            <h2 class="section-title">Required Documents</h2>
+
+            <ul class="doc-list">
+                {% for doc in documents_required %}
+                <li class="doc-item">
+                    <span>{{ doc.doc_name }}</span>
+                    <span class="doc-status {{ docs_status_map.get(doc.doc_name, 'not-started') | replace(' ', '-') }}">
+                        {{ docs_status_map.get(doc.doc_name, 'not started') }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+
+
+            <!-- PAYMENTS -->
+            <h2 class="section-title">Payments</h2>
+
+            {% if payments %}
+            <div class="payment-list">
+                {% for p in payments %}
+                <div class="payment-item">
+                    <div>
+                        <p class="payment-desc">{{ p.payment_type }}</p>
+                        <p class="payment-date">{{ p.date }}</p>
+                    </div>
+                    <p class="payment-amt">{{ p.currency }} {{ p.amount }}</p>
+                    <span class="payment-status {{ p.status|lower }}">{{ p.status }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+                <p>No payments recorded.</p>
+            {% endif %}
+
+
+            <!-- TIMELINE -->
+            <h2 class="section-title">Timeline</h2>
+
+            {% if timeline %}
+            <ul class="timeline-list">
+                {% for t in timeline %}
+                <li class="timeline-item">
+                    <strong>{{ t.event }}</strong>
+                    <span>{{ t.event_date }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <p>No timeline events.</p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<!-- DEADLINE SCRIPT -->
+<script>
+const dots = document.querySelectorAll(".dot");
+
+dots.forEach(dot => {
+    const dateStr = dot.dataset.deadline;
+
+    if (!dateStr) {
+        dot.style.background = "gray";
+        return;
+    }
+
+    const today = new Date();
+    const deadline = new Date(dateStr);
+    const diff = (deadline - today) / (1000 * 60 * 60 * 24);
+
+    if (diff < 0) {
+        dot.style.background = "gray";
+    } else if (diff <= 7) {
+        dot.style.background = "red";
+    } else if (diff <= 14) {
+        dot.style.background = "orange";
+    } else {
+        dot.style.background = "green";
+    }
+});
+</script>
+
+{% endblock %}
