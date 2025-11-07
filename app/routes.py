@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from app.db import db_connection
 import pycountry
 
@@ -139,3 +139,40 @@ def init_app(app):
 
         return render_template("country_applications.html", country = country_name, apps = app_list, summary = summary)
     
+    # Route for application details.
+    @app.route("/applications/<int:app_id>")
+    def application_details(app_id):
+        
+        conn = db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(''' SELECT * FROM applications WHERE app_id = ?''', (app_id,))
+        applications_list = cursor.fetchone()
+
+        if not applications_list:
+            flash("Application not found.", "error")
+            conn.close()
+            return redirect(url_for('dashboard'))
+        
+        cursor.execute(" SELECT * FROM documents_required WHERE app_id = ? ", (app_id,))
+        documents_required_list = cursor.fetchall()
+        
+        cursor.execute(" SELECT * FROM documents_status WHERE app_id = ? ", (app_id,))
+        documents_status_list = cursor.fetchall()
+        
+        cursor.execute(" SELECT * FROM payments WHERE app_id = ?", (app_id,))
+        payments = cursor.fetchall()
+
+        cursor.execute(" SELECT * FROM submission_info WHERE app_id = ? ", (app_id,))
+        submission_info = cursor.fetchone()
+        
+        cursor.execute("SELECT * FROM timeline WHERE app_id = ? ", (app_id,))
+        timeline = cursor.fetchall()
+
+        return render_template("application_details.html", app = dict(applications_list), 
+                               documents_required_list = [dict(d) for d in documents_required_list],
+                               documents_status_list = [dict(row) for row in documents_status_list],
+                               payments = [dict(p) for p in payments],
+                               submission_info = dict(submission_info) if submission_info else None,
+                               timeline = [dict(row) for row in timeline]
+                               )
