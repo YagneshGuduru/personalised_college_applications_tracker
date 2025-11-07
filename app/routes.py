@@ -176,3 +176,70 @@ def init_app(app):
                                submission_info = dict(submission_info) if submission_info else None,
                                timeline = [dict(row) for row in timeline]
                                )
+    
+    # Route for edit application - GET
+    @app.route("/applications/<int:app_id>/edit")
+    def edit_application(app_id):
+        conn = db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(" SELECT * FROM applications WHERE app_id = ? ", (app_id,))
+        app_data = cursor.fetchone()
+
+        if not app_data:
+            flash("Application not found.", "error")
+            return redirect(url_for("application_details", app_id = app_id))
+        
+        return render_template("edit_application.html", app = dict(app_data))
+    
+    # Route for update application - POST
+    @app.route("/applications/<int:app_id>/update", methods = ["POST"])
+    def update_application(app_id):
+        try:
+            conn = db_connection()
+            cursor = conn.cursor()
+            data = (
+                request.form.get("university_name"),
+                request.form.get("country_name"),
+                request.form.get("course_name"),
+                request.form.get("degree_type"),
+                request.form.get("course_url"),
+                request.form.get("intake_type"),
+                request.form.get("intake_year"),
+                request.form.get("application_open_date"),
+                request.form.get("deadline_date"),
+                request.form.get("ielts_required"),
+                request.form.get("german_required"),
+                request.form.get("extra_requirements"),
+                request.form.get("application_mode"),
+                request.form.get("portal_email"),
+                request.form.get("portal_password_hint"),
+                request.form.get("status"),
+                request.form.get("date_submitted"),
+                request.form.get("time_submitted"),
+                request.form.get("decision_date"),
+                request.form.get("extra_info"),
+                app_id
+            )
+
+            cursor.execute("""
+                UPDATE applications SET
+                    university_name = ?, country_name = ?, course_name = ?,
+                    degree_type = ?, course_url = ?, intake_type = ?, intake_year = ?,
+                    application_open_date = ?, deadline_date = ?,
+                    ielts_required = ?, german_required = ?, extra_requirements = ?,
+                    application_mode = ?, portal_email = ?, portal_password_hint = ?,
+                    status = ?, date_submitted = ?, time_submitted = ?, decision_date = ?,
+                    extra_info = ?
+                WHERE app_id = ?
+            """, data)
+
+            conn.commit()
+            flash("Application updated successfully!", "success")
+            return redirect(url_for("application_details", app_id = app_id))
+        
+        except Exception as e:
+            flash("Error updating application: " + str(e), "error")
+            return redirect(url_for("edit_application", app_id = app_id))
+        
+    
