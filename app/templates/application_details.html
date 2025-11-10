@@ -11,10 +11,27 @@
         <div class="dropdown subnav-item">
             <span class="subnav-link">Application Actions ▾</span>
             <div class="dropdown-panel">
-                <a href="{{ url_for('update_application', app_id = app.app_id)}}" class="dropdown-link">Edit Application</a>
-                <a class="dropdown-link danger">Delete Application</a>
+            
+                <a href="{{ url_for('update_application', app_id = app.app_id) }}" 
+                   class="dropdown-link">
+                   Edit Application
+                </a>
+            
+                <a href="#"
+                   class="dropdown-link danger"
+                   onclick="deleteApp('{{ app.app_id }}'); return false;">
+                   Delete Application
+                </a>
+            
+                <form id="delete-form-{{ app.app_id }}"
+                      action="{{ url_for('delete_application', app_id = app.app_id) }}"
+                      method="POST"
+                      style="display: none;">
+                </form>
+            
             </div>
         </div>
+
 
         <div class="dropdown subnav-item">
             <span class="subnav-link">Add Items ▾</span>
@@ -212,6 +229,12 @@ dots.forEach(dot => {
         dot.style.background = "green";
     }
 });
+// 
+function deleteApp(id) {
+    if (confirm("Are you sure you want to delete this application? This action cannot be undone.")) {
+        document.getElementById("delete-form-" + id).submit();
+    }
+}
 </script>
 
 {% endblock %}

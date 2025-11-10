@@ -224,3 +224,27 @@ def init_app(app):
             flash("Error updating application: " + str(e), "error")
             return redirect(url_for("update_application", app_id=app_id))
     
+    # Route for deleting an application
+    @app.route("/applications/<int:app_id>/delete", methods=["POST"])
+    def delete_application(app_id):
+        try:
+            conn = db_connection()
+            cursor = conn.cursor()
+
+            # Delete from related tables if needed
+            cursor.execute("DELETE FROM documents_required WHERE app_id = ?", (app_id,))
+            cursor.execute("DELETE FROM documents_status WHERE app_id = ?", (app_id,))
+            cursor.execute("DELETE FROM payments WHERE app_id = ?", (app_id,))
+            cursor.execute("DELETE FROM submission_info WHERE app_id = ?", (app_id,))
+            cursor.execute("DELETE FROM timeline WHERE app_id = ?", (app_id,))
+
+            # Delete main application
+            cursor.execute("DELETE FROM applications WHERE app_id = ?", (app_id,))
+            conn.commit()
+
+            flash("Application deleted successfully!", "success")
+            return redirect(url_for("dashboard"))
+
+        except Exception as e:
+            flash("Error deleting application: " + str(e), "error")
+            return redirect(url_for("application_details", app_id=app_id))
