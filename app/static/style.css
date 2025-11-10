@@ -43,7 +43,7 @@ body {
 }
 
 .container {
-  max-width: 80%;
+  max-width: 100%;
   margin: auto;
   padding: 1.5rem;
 }
@@ -100,6 +100,11 @@ body {
   color: white;
 }
 
+.cards-container{
+  max-width: 1000px;
+  margin: 2rem auto;
+}
+
 #country-buttons {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 260px));
@@ -135,15 +140,6 @@ body {
   font-size: 0.95rem;
   color: var(--secondary);
 }
-
-
-
-/* .grid-3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-} */
-
 
 
 @media (max-width: 600px) {
@@ -255,6 +251,7 @@ textarea {
 }
 
 
+/* Country wise application list */
 
 .summary-bar {
   display: flex;
@@ -267,21 +264,62 @@ textarea {
   background: var(--bg-soft);
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius);
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #1f2937;
-  box-shadow: 0 2px 6px var(--shadow);
+  /* box-shadow: 0 2px 6px var(--shadow); */
+  border: 2px solid #1e40af;
 }
 
+.status-total {
+  background: #f3f4f6;    
+  border: 1px solid #6b7280; 
+  color: #374151;          
+}
 
+.status-shortlisted {
+  background: #dbeafe;     
+  border: 1px solid #60a5fa; 
+  color: #1d4ed8;           
+}
+
+.status-preparing {
+  background: #fef3c7;     
+  border: 1px solid #f59e0b; 
+  color: #b45309;          
+}
+
+.status-submitted {
+  background: #e0e7ff;       
+  border: 1px solid #6366f1; 
+  color: #4338ca;            
+}
+
+.status-admitted {
+  background: #dcfce7;       
+  border: 1px solid #22c55e; 
+  color: #15803d;            
+}
+
+.status-rejected {
+  background: #fee2e2;        
+  border: 1px solid #ef4444;  
+  color: #b91c1c;             
+}
+
+.lists-container{
+  max-width: 90%;
+  margin-left: 8rem;
+}
 
 .app-list {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 400px));
   gap: 1rem;
 }
 
 .app-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: 1.5rem;
   background: var(--bg-light);
   border-radius: var(--radius);
@@ -306,6 +344,7 @@ textarea {
 }
 
 .app-footer {
+  margin-top: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
