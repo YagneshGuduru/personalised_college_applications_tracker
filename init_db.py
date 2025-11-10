@@ -22,15 +22,10 @@ CREATE TABLE IF NOT EXISTS applications (
     extra_requirements TEXT,
 
     application_mode TEXT,
-    portal_email TEXT,
-    portal_password_hint TEXT,
 
     status TEXT NOT NULL,
     date_submitted TEXT,
-    time_submitted TEXT,
-    decision_date TEXT,
-
-    extra_info TEXT
+    decision_date TEXT
 );
 
 CREATE TABLE IF NOT EXISTS documents_required (

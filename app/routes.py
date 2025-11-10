@@ -43,13 +43,9 @@ def init_app(app):
             german_required       = form.get("german_required")
             extra_requirements    = form.get("extra_requirements")
             application_mode      = form.get("application_mode")
-            portal_email          = form.get("portal_email")
-            portal_password_hint  = form.get("portal_password_hint")
             status                = form["status"]
-            date_submitted        = form.get("date_submitted")
-            time_submitted        = form.get("time_submitted")
-            decision_date         = form.get("decision_date")
-            extra_info            = form.get("extra_info")
+            date_submitted        = None
+            decision_date         = None
                 
 
             cursor.execute("""
@@ -59,20 +55,16 @@ def init_app(app):
                     intake_type, intake_year,
                     application_open_date, deadline_date,
                     ielts_required, german_required, extra_requirements,
-                    application_mode, portal_email, portal_password_hint,
-                    status, date_submitted, time_submitted, decision_date,
-                    extra_info
+                    application_mode, status, date_submitted, decision_date
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 university_name, country_name, course_name,
                 degree_type, course_url,
                 intake_type, intake_year,
                 application_open_date, deadline_date,
                 ielts_required, german_required, extra_requirements,
-                application_mode, portal_email, portal_password_hint,
-                status, date_submitted, time_submitted, decision_date,
-                extra_info
+                application_mode, status, date_submitted, decision_date
             ))
 
             conn.commit()
