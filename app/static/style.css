@@ -421,7 +421,7 @@ textarea {
 
 .dropdown-panel {
     position: absolute;
-    top: 100%;                 /* sits right under the trigger */
+    top: 90%;                 /* sits right under the trigger */
     right: 0;
     background: var(--bg-light);
     border-radius: var(--radius);
@@ -455,21 +455,18 @@ textarea {
 
 /* Main card */
 
-.details-layout {
-  display: block;
-  margin-top: 1rem;
-}
-
-.big-details-card {
+.app-details-card {
   padding: 2rem;
   position: relative;
+  border-radius: var(--radius);
+  box-shadow: 20px 20px 20px 20px var(--shadow);
 }
 
 /* Submitted Tag */
 .submitted-tag {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
+  position: relative;
+  top: 10rem;
+  left: 10rem;
   background: #d1fae5;
   color: #065f46;
   padding: 0.3rem 0.8rem;
@@ -479,61 +476,28 @@ textarea {
 
 /* Section Titles */
 .section-title {
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
   margin-bottom: 0.6rem;
   font-size: 1.2rem;
   font-weight: 700;
 }
 
-/* Two-column grid inside card */
-.two-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.2rem;
-}
-
-.two-grid label {
+.app-row label {
   font-weight: 600;
   color: var(--secondary);
   font-size: 0.85rem;
 }
-
-/* Make Application Dates a single wide row */
-.dates-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);  /* 5 equal columns */
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+.app-row-course-details{
+  grid-template-columns:
+      minmax(80px, 8%)
+      minmax(200px, 20%)
+      minmax(200px, 20%)
+      minmax(100px, 10%);
+  gap:10px;
 }
-
-.dates-row label {
-    font-weight: 600;
-    color: var(--secondary);
-    font-size: 0.85rem;
+.app-row-requirements{
+  grid-template-columns: minmax(100px,10%) minmax(150px,15%) minmax(150px,15%);
 }
-
-.dates-row p {
-    margin-top: 0.3rem;
-}
-
-.extra-req-box {
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
-    padding: 0.5rem 0;
-    width: 100%;
-}
-
-.extra-req-box label {
-    font-weight: 600;
-    color: var(--secondary);
-    font-size: 0.85rem;
-}
-
-.extra-req-text {
-    margin-top: 0.3rem;
-    line-height: 1.65;
-}
-
 
 /* Extra Info */
 .extra-info-text {

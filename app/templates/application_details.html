@@ -32,20 +32,19 @@
 {% endblock%}
 {% block content %}
 
-<div class="container">
-
-    <div class="details-layout">
-
-        <!-- MAIN CARD -->
-        <div class="card big-details-card">
-
-            <!-- SUBMITTED TAG -->
-            <span class="submitted-tag">{{ app.status }}</span>
-
+<div class="container app-details-card">
+        <div class="summary-bar">
+            <div class="summary-box"><span>{{ app.status }}</span></div>
+        </div>
             <!-- COURSE & INTAKE DETAILS -->
-            <h2 class="section-title">Course & Intake Details</h2>
+            <h2 class="section-title">Course Details</h2>
 
-            <div class="two-grid">
+            <div class="form-row app-row app-row-course-details">
+                <div>
+                    <label>Degree Type</label>
+                    <p>{{ app.degree_type if app.degree_type else '-' }}</p>
+                </div>
+                
                 <div>
                     <label>Course Name</label>
                     <p>{{ app.course_name }}</p>
@@ -60,16 +59,6 @@
                     <label>Country</label>
                     <p>{{ app.country_name }}</p>
                 </div>
-
-                <div>
-                    <label>Degree Type</label>
-                    <p>{{ app.degree_type if app.degree_type else '-' }}</p>
-                </div>
-
-                <div>
-                    <label>Intake</label>
-                    <p>{{ app.intake_type }} {{ app.intake_year }}</p>
-                </div>
                 
                 <div>
                     <label>Course URL</label>
@@ -80,87 +69,58 @@
                     </p>
                 </div>
             </div>
+            
+            <br>
 
+            <h2 class="section-title">Intake & Important dates</h2>
 
-            <!-- APPLICATION DATES -->
-            <h2 class="section-title">Application Dates</h2>
-
-            <div class="dates-row">
-
+            <div class="form-row app-row">
+                <div>
+                    <label>Intake</label>
+                    <p>{{ app.intake_type }} {{ app.intake_year }}</p>
+                </div>
                 <div>
                     <label>Application Opens</label>
                     <p>{{ app.application_open_date if app.application_open_date else '-' }}</p>
                 </div>
-
                 <div>
                     <label>Deadline</label>
                     <div class="deadline-line">
                         <p>{{ app.deadline_date }}</p>
                     </div>
                 </div>
-
                 <div>
                     <label>Date Submitted</label>
                     <p>{{ app.date_submitted if app.date_submitted else '-' }}</p>
                 </div>
-
-                <div>
-                    <label>Time Submitted</label>
-                    <p>{{ app.time_submitted if app.time_submitted else '-' }}</p>
-                </div>
-
                 <div>
                     <label>Decision Date</label>
                     <p>{{ app.decision_date if app.decision_date else '-' }}</p>
                 </div>
             </div>
 
+            <br>
 
             <!-- REQUIREMENTS -->
             <h2 class="section-title">Requirements</h2>
 
-            <div class="dates-row">
+            <div class="form-row app-row app-row-requirements">
                 <div>
                     <label>IELTS Required</label>
                     <p>{{ app.ielts_required if app.ielts_required else '-' }}</p>
                 </div>
 
                 <div>
-                    <label>German Required</label>
+                    <label>Native Language</label>
                     <p>{{ app.german_required if app.german_required else '-' }}</p>
                 </div>
-            </div>
-            
-            <div class = "extra-req-box">
-                <div>
-                    <label>Extra Requirements</label>
-                    <p>{{ app.extra_requirements | replace("\n",'<br>') | safe if app.extra_requirements else '-' }}</p>
-                </div>
-            </div>
-
-
-            <!-- PORTAL INFO -->
-            <h2 class="section-title">Portal Information</h2>
-
-            <div class="dates-row">
                 <div>
                     <label>Application Mode</label>
                     <p>{{ app.application_mode if app.application_mode else '-' }}</p>
                 </div>
-
                 <div>
-                    <label>Portal Email</label>
-                    <p>{{ app.portal_email if app.portal_email else '-' }}</p>
-                </div>
-
-                <div>
-                    <label>Password Hint</label>
-                    <p>{{ app.portal_password_hint if app.portal_password_hint else '-' }}</p>
-                </div>
-
-                <div>
-                    <label>Portal Status</label>
-                    <p>{{ submission_info.portal_status_message if submission_info else '-' }}</p>
+                    <label>Extra Requirements</label>
+                    <p>{{ app.extra_requirements | replace("\n",'<br>') | safe if app.extra_requirements else '-' }}</p>
                 </div>
             </div>
 
@@ -224,8 +184,6 @@
                 <p>No timeline events.</p>
             {% endif %}
 
-        </div>
-    </div>
 </div>
 
 <!-- DEADLINE SCRIPT -->
